@@ -1,9 +1,12 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import HorSlider from "./HorSlider";
+import { Brands } from "./GenInfo";
 
 const ShopBy = ({ filter, title }) => {
   const [products, setProducts] = useState([]);
+  console.log(products);
+
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -12,7 +15,7 @@ const ShopBy = ({ filter, title }) => {
     const fetchData = async () => {
       try {
         const res = await axios.get(
-          `${import.meta.env.VITE_BASE_URL}/api/filter/${filter}`
+          `${import.meta.env.VITE_BASE_URL}/api/filter/${filter}`,
         );
         if (isMounted) {
           setProducts(res.data);
@@ -38,13 +41,14 @@ const ShopBy = ({ filter, title }) => {
       <div className="overflow-x-auto overflow-y-hidden md:max-w-full scroll-container mb-10 mx-auto relative scroll-container">
         {loading && <p>Loading...</p>}
         {error && <p>Error while fetching: {error.message}</p>}
+        <Brands />
 
         <div className="flex flex-nowrap space-x-4">
           {/* Ensure products is always an array */}
-          {(Array.isArray(products) ? products : []).map((elem) => (
+          {(Array.isArray(products) ? products : []).map((elem, id) => (
             <HorSlider
               product={elem}
-              key={elem._id || elem.id} // fallback if _id is missing
+              key={elem._id || elem.id || id} // fallback if _id is missing
               className="inline-block"
               home={true}
             />
